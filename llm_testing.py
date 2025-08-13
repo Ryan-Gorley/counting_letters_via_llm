@@ -102,9 +102,5 @@ def _load_dictionary() -> list[str]:
     return sorted(word.lower() for word in loaded.keys())
 
 
-def run_test():
-    asyncio.run(main())
-    
-    
-if __name__ == "__main__":
-    asyncio.run(main())
+def run_test(sample_count: int = SAMPLES_DEFAULT):
+    asyncio.run(main(samples=sample_count))
