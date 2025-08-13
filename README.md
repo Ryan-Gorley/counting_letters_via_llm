@@ -1,11 +1,11 @@
-## Counting Letters via LLM
+# Counting Letters via LLM
 
 This is a small CLI program for running tests and analyzing results of large language models counting letters in words. It uses a local Python virtual environment in `.venv`, a main entrypoint `main.py`, and two helper scripts:
 
 - `setup.sh` — creates the virtual environment and installs dependencies from `requirements.txt`.
 - `run.sh` — executes the program, passing along arguments.
 
-### Prerequisites
+## Requirements
 
 - Python 3 installed (and available as `python3`).
 ### Optional
