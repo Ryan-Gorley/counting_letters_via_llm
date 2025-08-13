@@ -8,7 +8,7 @@ This is a small CLI program for running tests and analyzing results of large lan
 ### Prerequisites
 
 - Python 3 installed (and available as `python3`).
-# Optional
+### Optional
 - Bash shell (to run setup and execution scripts).
 
 ## Setup
