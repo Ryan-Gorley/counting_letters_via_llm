@@ -69,17 +69,16 @@ async def main(samples: int = SAMPLES_DEFAULT):
             l = pick_letter(w)
             return await one_trial(w, l)
         
-    tasks = [asyncio.create_task(bound_trial()) for _ in range(SAMPLES_DEFAULT)]
+    tasks = [asyncio.create_task(bound_trial()) for _ in range(samples)]
     results = await asyncio.gather(*tasks)
     
     for i, result in enumerate(results):
-        print(f"Collecting result {str(i + 1).rjust(6)}/{SAMPLES_DEFAULT}...", end='\r')
         if result["type"] == "refusal":
             data["refusals"].append(result["result"]) # type: ignore
         elif result["type"] == "success":
             data["successes"].append(result["result"]) # type: ignore
         else:
-            print(f"\nError in trial {i + 1}: {result['result']}")
+            print(f"Error in trial {i + 1}: {result['result']}")
     
     Path("results").mkdir(exist_ok=True)
     with open(Path("results") / f"{int(time.time())}.json", "w") as file:
