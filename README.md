@@ -35,24 +35,26 @@ You can also run it directly:
 
 ### Options
 
-- `-t`, `--test`   — Run test on GPT-5
-- `-c`, `--check`  — Print total correct and incorrect results
-- `-a`, `--all`    — Print all of the results, organized
+- `-T`, `--test`   — Run test on GPT-5
+- `-C`, `--check`  — Print total correct and incorrect results
+- `-A`, `--all`    — Print all of the results, organized
+- `-c`, `--concurrent` — Number of concurrent requests to make during testing (1-32, default 10)
+- `-s`, `--samples` — Number of samples to collect during testing (1-1000, default 100)
 
 Examples:
 
 ```bash
 # Run the tests
-./run.sh -t
+./run.sh -T
 
 # Show totals
-./run.sh -c
+./run.sh -C
 
 # Print all organized results
-./run.sh -a
+./run.sh -A
 
 # Run a series of tests then print all results and totals
-./run.sh -atc
+./run.sh -ATC
 ```
 
 ## Results

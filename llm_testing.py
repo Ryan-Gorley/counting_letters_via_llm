@@ -4,17 +4,16 @@ import random
 import time
 
 from pathlib import Path
-from string import ascii_lowercase
-from typing import Coroutine, TypedDict
+from typing import TypedDict
 
 from pydantic import BaseModel
 import openai
 from openai.types.responses import ParsedResponse, ResponseOutputRefusal
 
-_ascii_lowercase: set[str] = set(ascii_lowercase)
+from common import ASCII_LOWERCASE
+
 
 CLIENT = openai.AsyncOpenAI()
-SAMPLES_DEFAULT: int = 100
 SLEEP_TIME: float = (60/500) * 1.5  # seconds, ~180ms, ~333 RPM
 
 class ExperimentData(TypedDict):
@@ -58,18 +57,18 @@ async def one_trial(word: str, letter: str) -> ExperimentResult:
         return ExperimentResult(type="error", result=(word, letter, str(e)))
 
 
-async def main(samples: int = SAMPLES_DEFAULT):
+async def _testing(sample_count: int, concurrent: int):
     words: list[str] = _load_dictionary()
     data: ExperimentData = ExperimentData(refusals=[], successes=[])
     
-    sem = asyncio.Semaphore(10)  # Limit concurrent requests
+    sem = asyncio.Semaphore(concurrent)  # Limit concurrent requests
     async def bound_trial():
         async with sem:
             w = random.choice(words)
             l = pick_letter(w)
             return await one_trial(w, l)
         
-    tasks = [asyncio.create_task(bound_trial()) for _ in range(samples)]
+    tasks = [asyncio.create_task(bound_trial()) for _ in range(sample_count)]
     results = await asyncio.gather(*tasks)
     
     for i, result in enumerate(results):
@@ -86,7 +85,7 @@ async def main(samples: int = SAMPLES_DEFAULT):
         
         
 def pick_letter(word: str) -> str:
-    while (letter := random.choice(word)) not in _ascii_lowercase:
+    while (letter := random.choice(word)) not in ASCII_LOWERCASE:
         pass
     return letter
 
@@ -101,5 +100,7 @@ def _load_dictionary() -> list[str]:
     return sorted(word.lower() for word in loaded.keys())
 
 
-def run_test(sample_count: int = SAMPLES_DEFAULT):
-    asyncio.run(main(samples=sample_count))
+def run_test(sample_count: int, concurrent: int):
+    sample_count = sample_count
+    concurrent = concurrent
+    asyncio.run(_testing(sample_count, concurrent))
